@@ -9,6 +9,9 @@ interface ProductState {
   error: string | null;
   offset: number;
   limit: number;
+  searchResults: Product[];
+  isSearching: boolean;
+  searchError: string | null;
 }
 
 export const useProductStore = defineStore('product', {
@@ -19,14 +22,16 @@ export const useProductStore = defineStore('product', {
     error: null,
     offset: 0,
     limit: 10,
+    searchResults: [],
+    isSearching: false,
+    searchError: null,
   }),
 
   actions: {
     async getProducts(reset: boolean = false): Promise<Product[]> {
       if (this.isLoading) {
-         return this.list; 
+        return this.list;
       }
-
       this.isLoading = true;
       this.error = null;
       let newProducts: Product[] = [];
@@ -36,20 +41,15 @@ export const useProductStore = defineStore('product', {
           this.offset = 0;
           this.list = [];
         }
-
         const api = useProductsApi();
         newProducts = await api.getProductsList(this.offset, this.limit);
-
         if (newProducts.length === 0) {
-            console.log("No hay mas productos.");
-            return this.list; 
+          return this.list;
         }
-
         this.list.push(...newProducts);
         this.offset += this.limit;
-        
         return this.list;
-        
+
       } catch (e: any) {
         this.error = e.message || 'Error al cargar productos.';
         throw e;
@@ -59,19 +59,39 @@ export const useProductStore = defineStore('product', {
     },
 
     async getProductById(id: number) {
-        this.isLoading = true;
-        this.error = null;
+      this.isLoading = true;
+      this.error = null;
+      this.currentProduct = null;
+      try {
+        const api = useProductsApi();
+        const product = await api.getProductById(id);
+        this.currentProduct = product;
+      } catch (e: any) {
+        this.error = e.message || 'Error al cargar producto.';
         this.currentProduct = null;
-        try {
-            const api = useProductsApi();
-            const product = await api.getProductById(id);
-            this.currentProduct = product;
-        } catch (e: any) {
-            this.error = e.message || 'Error al cargar producto.';
-            this.currentProduct = null;
-        } finally {
-            this.isLoading = false;
-        }
+      } finally {
+        this.isLoading = false;
+      }
+    },
+
+    async searchProducts(query: string) {
+      this.isSearching = true;
+      this.searchError = null;
+      this.searchResults = [];
+
+      if (!query || query.trim() === '') {
+        this.isSearching = false;
+        return;
+      }
+
+      try {
+        const api = useProductsApi();
+        this.searchResults = await api.searchProductsByTitle(query.trim());
+      } catch (e: any) {
+        this.searchError = e.message || `Error al realizar la búsqueda para: "${query}"`;
+      } finally {
+        this.isSearching = false;
+      }
     },
   },
 });

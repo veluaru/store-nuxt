@@ -18,17 +18,33 @@ export const useProductsApi = () => {
   const getProductById = async (id: number): Promise<Product> => {
     try {
       const url = `${BASE_URL}/${id}`;
+      // Nuxt $fetch
       const response = await $fetch<Product>(url);
       return response;
     } catch (error) {
       console.error(`Error consultando el producto:`, error);
-      // Nuxt $fetch
       throw new Error('Producto no encontrado o error de red.');
+    }
+  };
+
+  const searchProductsByTitle = async (title: string): Promise<Product[]> => {
+    try {
+      if (!title) {
+        return [];
+      }
+      const url = `${BASE_URL}?title=${encodeURIComponent(title)}`;
+      // Nuxt $fetch
+      const response = await $fetch<Product[]>(url);
+      return response;
+    } catch (error) {
+      console.error(`Error buscando productos con el título '${title}':`, error);
+      throw new Error('Error al realizar la búsqueda de productos.');
     }
   };
 
   return {
     getProductsList,
     getProductById,
+    searchProductsByTitle
   };
 };

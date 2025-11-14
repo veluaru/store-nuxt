@@ -5,6 +5,14 @@
         <img src="~/assets/images/logo.png" alt="TuShop" class="header-content__logo-image" />
       </NuxtLink>
 
+      <div class="header-content__search-bar">
+        <input type="text" placeholder="Buscar productos..." class="header-content__search-bar__input"
+          v-model="searchText" @keyup.enter="handleSearch" />
+        <button class="header-content__search-bar__button" @click="handleSearch" aria-label="Buscar">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+      </div>
+
       <div class="header-content__header-actions">
         <!-- <NuxtLink to="/account" class="action-link">
           <i class="fa-solid fa-user"></i>
@@ -28,6 +36,14 @@ import { storeToRefs } from 'pinia';
 
 const cartStore = useCartStore();
 const { totalItems } = storeToRefs(cartStore);
+const searchText = ref('');
+
+const router = useRouter();
+function handleSearch() {
+  if (searchText.value.trim()) {
+    router.push({ path: '/search', query: { title: searchText.value.trim() } });
+  }
+}
 </script>
 
 <style scoped lang="scss">
@@ -52,6 +68,37 @@ const { totalItems } = storeToRefs(cartStore);
   justify-content: space-between;
   align-items: center;
 
+  &__search-bar {
+    display: flex;
+    flex-grow: 1;
+    max-width: 500px;
+    border: 2px solid #E5E7EB;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: border-color 0.3s;
+
+    &__input {
+      flex-grow: 1;
+      padding: 10px 15px;
+      border: none;
+      outline: none;
+      font-size: 1rem;
+      background-color: #F9FAFB;
+    }
+    &__button {
+      color: #374151;
+      border: none;
+      padding: 10px 15px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background-color 0.2s;
+      flex-shrink: 0;
+
+      &:hover {
+        background-color: #e2e2e2;;
+      }
+    }
+  }
 
   &__logo-link {
     display: flex;

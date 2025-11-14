@@ -5,7 +5,7 @@
       <h2 class="home__title-section__title">Nuestros Productos</h2>
     </div>
     <div v-if="error" class="home__error-message-section">
-      ⚠️ Error al cargar: {{ error.message }}
+      ⚠️ Error al cargar: {{ error }}
     </div>
 
     <ProductList v-else-if="products.length > 0" :products="products" @add-to-cart="handleAddToCart" />
@@ -38,18 +38,9 @@ import AppHeroBanner from '~/components/AppHeroBanner.vue';
 const productStore = useProductStore();
 const cartStore = useCartStore();
 
-const { list: products } = storeToRefs(productStore);
+const { list: products, isLoading: pending, error } = storeToRefs(productStore);
 
-
-const fetchProducts = () => {
-  return productStore.getProducts(true);
-};
-
-const { pending, error } = await useAsyncData(
-  'products-list',
-  fetchProducts,
-  { lazy: true }
-);
+await productStore.getProducts(true);
 
 function handleAddToCart(product: Product) {
   cartStore.addProduct(product);
