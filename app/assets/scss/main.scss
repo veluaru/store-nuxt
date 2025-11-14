@@ -1,0 +1,21 @@
+// Ejemplo de variable SASS
+// $primary-color: #10B981; 
+$font-stack: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+
+body {
+  margin: 0;
+  // Usamos la pila de fuentes definida
+  font-family: $font-stack; 
+//   background-color: #f9fafb;
+//   color: #333;
+}
+
+// Estilos base para enlaces
+// a {
+//   color: $primary-color;
+//   text-decoration: none;
+
+//   &:hover {
+//     text-decoration: underline;
+//   }
+// }
