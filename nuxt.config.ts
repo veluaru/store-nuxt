@@ -11,4 +11,9 @@ export default defineNuxtConfig({
     baseURL: '/store-nuxt/',
     buildAssetsDir: '/_nuxt/', 
   },
+  nitro: {
+    output: {
+      publicDir: 'dist'
+    }
+  },
 })

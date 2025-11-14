@@ -9,8 +9,6 @@ on:
       - main
       - master
 
-# Permisos requeridos para que JamesIves/github-pages-deploy-action pueda
-# crear la rama 'gh-pages' y hacer el push de los archivos.
 permissions:
   contents: write
 
