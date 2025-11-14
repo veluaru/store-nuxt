@@ -4,32 +4,36 @@ on:
     branches:
       - main
       - master
+
+# Permisos requeridos para que JamesIves/github-pages-deploy-action pueda
+# crear la rama 'gh-pages' y hacer el push de los archivos.
 permissions:
   contents: write
+
 jobs:
   build-and-deploy:
-    concurrency: ci-${{ github.ref }}
+    # Garantiza que solo se ejecute un build a la vez por ref
+    concurrency: ci-${{ github.ref }} 
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [18]
+
     steps:
     - name: Checkout 🛎️
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4 # Actualizado a v4
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
+    - name: Setup Node.js 🔧
+      uses: actions/setup-node@v4
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: 18
 
-    - name: Install & Generate 🔧
+    - name: Install & Generate (Build Estático) ⚙️
       run: |
         npm ci
+        # Genera los archivos estáticos en la carpeta 'dist'
         npm run generate
-      env:
-        NUXT_APP_BASE_URL: ${{ vars.NUXT_APP_BASE_URL  }}
 
-    - name: Deploy 🚀
+    - name: Deploy to GitHub Pages 🚀
+      # Usa la acción JamesIves para enviar la carpeta 'dist' a la rama 'gh-pages'
       uses: JamesIves/github-pages-deploy-action@v4
       with:
         folder: dist
+        # El token GITHUB_TOKEN es proporcionado automáticamente por GitHub
