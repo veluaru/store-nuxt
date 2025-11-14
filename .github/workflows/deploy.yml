@@ -4,39 +4,32 @@ on:
     branches:
       - main
       - master
-  pull_request:
-    branches:
-      - main
-      - master
-
 permissions:
   contents: write
-
 jobs:
-  build:
+  build-and-deploy:
+    concurrency: ci-${{ github.ref }}
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18]
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      
-      - name: Set up Node.js 20
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm' # Habilitar caché de NPM
+    - name: Checkout 🛎️
+      uses: actions/checkout@v3
 
-      # Paso 1: Instalación de dependencias
-      # Ejecutar 'npm ci' (limpio) ahora debería funcionar ya que 'nuxt prepare'
-      # ya no es parte del hook 'postinstall'.
-      - name: Install dependencies
-        run: npm ci
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
 
-      # Paso 2: Ejecutar el script 'prepare' explícitamente.
-      # Este paso es el que antes fallaba, pero al estar separado del 'npm ci',
-      # es más probable que se ejecute correctamente.
-      - name: Run Nuxt Prepare
-        run: npm run prepare
+    - name: Install & Generate 🔧
+      run: |
+        npm ci
+        npm run generate
+      env:
+        NUXT_APP_BASE_URL: ${{ vars.NUXT_APP_BASE_URL  }}
 
-      # Paso 3: Construcción de la aplicación (Build)
-      - name: Build Application
-        run: npm run build
+    - name: Deploy 🚀
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        folder: dist
