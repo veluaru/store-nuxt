@@ -4,6 +4,10 @@ on:
     branches:
       - main
       - master
+  pull_request:
+    branches:
+      - main
+      - master
 
 # Permisos requeridos para que JamesIves/github-pages-deploy-action pueda
 # crear la rama 'gh-pages' y hacer el push de los archivos.
@@ -11,29 +15,30 @@ permissions:
   contents: write
 
 jobs:
-  build-and-deploy:
-    # Garantiza que solo se ejecute un build a la vez por ref
-    concurrency: ci-${{ github.ref }} 
+  build:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout 🛎️
-      uses: actions/checkout@v4 # Actualizado a v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm' # Habilitar caché de NPM
 
-    - name: Setup Node.js 🔧
-      uses: actions/setup-node@v4
-      with:
-        node-version: 18
+      # Paso 1: Instalación de dependencias
+      # Ejecutar 'npm ci' (limpio) ahora debería funcionar ya que 'nuxt prepare'
+      # ya no es parte del hook 'postinstall'.
+      - name: Install dependencies
+        run: npm ci
 
-    - name: Install & Generate (Build Estático) ⚙️
-      run: |
-        npm ci
-        # Genera los archivos estáticos en la carpeta 'dist'
-        npm run generate
+      # Paso 2: Ejecutar el script 'prepare' explícitamente.
+      # Este paso es el que antes fallaba, pero al estar separado del 'npm ci',
+      # es más probable que se ejecute correctamente.
+      - name: Run Nuxt Prepare
+        run: npm run prepare
 
-    - name: Deploy to GitHub Pages 🚀
-      # Usa la acción JamesIves para enviar la carpeta 'dist' a la rama 'gh-pages'
-      uses: JamesIves/github-pages-deploy-action@v4
-      with:
-        folder: dist
-        # El token GITHUB_TOKEN es proporcionado automáticamente por GitHub
+      # Paso 3: Construcción de la aplicación (Build)
+      - name: Build Application
+        run: npm run build
