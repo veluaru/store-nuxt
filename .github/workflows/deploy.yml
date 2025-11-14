@@ -1,9 +1,7 @@
-name: CI Build
+name: CI Build and Deploy
 
 on:
   push:
-    branches: [ master ]
-  pull_request:
     branches: [ master ]
 
 jobs:
@@ -17,20 +15,32 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm' # Habilitar caché de NPM
+          cache: 'npm'
 
-      # Paso 1: Instalación de dependencias
-      # Ejecutar 'npm ci' (limpio) ahora debería funcionar ya que 'nuxt prepare'
-      # ya no es parte del hook 'postinstall'.
       - name: Install dependencies
         run: npm ci
 
-      # Paso 2: Ejecutar el script 'prepare' explícitamente.
-      # Este paso es el que antes fallaba, pero al estar separado del 'npm ci',
-      # es más probable que se ejecute correctamente.
       - name: Run Nuxt Prepare
         run: npm run prepare
 
-      # Paso 3: Construcción de la aplicación (Build)
-      - name: Build Application
-        run: npm run build
+      - name: Generate Static Site
+        run: npm run generate
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+  deploy:
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
