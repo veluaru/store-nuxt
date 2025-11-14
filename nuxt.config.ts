@@ -6,9 +6,5 @@ export default defineNuxtConfig({
   modules: ['@pinia/nuxt'],
   css: [
     './app/assets/scss/main.scss', 
-  ],
-  app: {
-    baseURL: '/store-nuxt/',
-    buildAssetsDir: '/_nuxt/', 
-  },
+  ]
 })
