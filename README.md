@@ -2,6 +2,8 @@
 
 Una aplicación de tienda en línea moderna y responsive construida con Nuxt 3 y Pinia. Esta aplicación simula un catálogo de productos, permitiendo a los usuarios explorar, ver detalles y añadir artículos al carrito de compras utilizando el almacenamiento global de Pinia.
 
+El proyecto se encuentra desplegado en el siguiente enlace: https://veluaru.github.io/store-nuxt/
+
 ## 🌟 Características Principales
 
 - **Catálogo de Productos Dinámico:** Carga la lista de productos de la API Platzi Fakestore ([https://api.escuelajs.co/api/v1/products](https://fakeapi.platzi.com/en/rest/products/)) y soporta paginación al cargar más.
