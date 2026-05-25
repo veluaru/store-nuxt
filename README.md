@@ -57,4 +57,4 @@ Una vez instaladas las dependencias, puedes iniciar el servidor de desarrollo:
 npm run dev
 ```
 
-La aplicación estará disponible en http://localhost:3000.
+La aplicación estará disponible en [este enlace](https://veluaru.github.io/store-nuxt/).
