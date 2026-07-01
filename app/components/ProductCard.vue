@@ -14,7 +14,7 @@
       </div>
     </NuxtLink>
     <button @click="handleAddToCart" class="product-card__add-to-cart-button">
-      Añadir
+      Add
     </button>
   </div>
 </template>

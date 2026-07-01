@@ -10,8 +10,8 @@ export const useProductsApi = () => {
       const response = await $fetch<Product[]>(url);
       return response;
     } catch (error) {
-      console.error('Error consultando la lista de productos:', error);
-      throw new Error('No se pudo cargar el listado de productos.');
+      console.error('Error fetching product list:', error);
+      throw new Error('Could not load the product list.');
     }
   };
 
@@ -22,8 +22,8 @@ export const useProductsApi = () => {
       const response = await $fetch<Product>(url);
       return response;
     } catch (error) {
-      console.error(`Error consultando el producto:`, error);
-      throw new Error('Producto no encontrado o error de red.');
+      console.error('Error fetching product:', error);
+      throw new Error('Product not found or network error.');
     }
   };
 
@@ -37,8 +37,8 @@ export const useProductsApi = () => {
       const response = await $fetch<Product[]>(url);
       return response;
     } catch (error) {
-      console.error(`Error buscando productos con el título '${title}':`, error);
-      throw new Error('Error al realizar la búsqueda de productos.');
+      console.error(`Error searching products with title '${title}':`, error);
+      throw new Error('Failed to search products.');
     }
   };
 

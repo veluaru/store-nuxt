@@ -51,7 +51,7 @@ export const useProductStore = defineStore('product', {
         return this.list;
 
       } catch (e: any) {
-        this.error = e.message || 'Error al cargar productos.';
+        this.error = e.message || 'Failed to load products.';
         throw e;
       } finally {
         this.isLoading = false;
@@ -67,7 +67,7 @@ export const useProductStore = defineStore('product', {
         const product = await api.getProductById(id);
         this.currentProduct = product;
       } catch (e: any) {
-        this.error = e.message || 'Error al cargar producto.';
+        this.error = e.message || 'Failed to load product.';
         this.currentProduct = null;
       } finally {
         this.isLoading = false;
@@ -88,7 +88,7 @@ export const useProductStore = defineStore('product', {
         const api = useProductsApi();
         this.searchResults = await api.searchProductsByTitle(query.trim());
       } catch (e: any) {
-        this.searchError = e.message || `Error al realizar la búsqueda para: "${query}"`;
+        this.searchError = e.message || `Failed to search for: "${query}"`;
       } finally {
         this.isSearching = false;
       }

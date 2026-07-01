@@ -2,21 +2,21 @@
   <div class="search-page-container">
     <div class="search-page-container__header-bar">
       <NuxtLink to="/" class="search-page-container__back-button">
-        <i class="fa-solid fa-arrow-left"></i> Volver al Inicio
+        <i class="fa-solid fa-arrow-left"></i> Back to Home
       </NuxtLink>
       
       <h1 class="search-page-container__section-title">
-        Resultados para: "<span class="search-query">{{ currentQuery }}</span>"
+        Results for: "<span class="search-query">{{ currentQuery }}</span>"
       </h1>
     </div>
 
     <div v-if="error" class="search-page-container__error-message">
-      ⚠️ Error en la búsqueda: {{ error.message }}
+      ⚠️ Search error: {{ error.message }}
     </div>
 
     <div v-else-if="pending" class="search-page-container__status-message-wrapper">
       <LoadingSpinner />
-      <p>Buscando productos...</p>
+      <p>Searching products...</p>
     </div>
 
     <ProductList 
@@ -27,7 +27,7 @@
 
     <div v-else class="search-page-container__status-message-wrapper">
       <div class="search-page-container__info-message">
-        No se encontraron productos que coincidan con "{{ currentQuery }}". Intenta otra palabra clave.
+        No products found matching "{{ currentQuery }}". Try another keyword.
       </div>
     </div>
   </div>
@@ -38,8 +38,6 @@ import { ref, watch, computed } from 'vue';
 import { useProductsApi } from '~/composables/useProductsApi';
 import { useCartStore } from '~/store/cart';
 import type { Product } from '~/types/Product';
-import ProductList from '~/components/ProductList.vue';
-import LoadingSpinner from '~/components/LoadingSpinner.vue';
 
 const route = useRoute();
 const productsApi = useProductsApi();
@@ -68,7 +66,6 @@ const searchProducts = async (title: string) => {
   }
 };
 
-// 3. Observar cambios en el parámetro de la URL
 watch(currentQuery, (newQuery) => {
   if (newQuery) {
     searchProducts(newQuery);

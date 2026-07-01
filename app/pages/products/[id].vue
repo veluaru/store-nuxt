@@ -1,11 +1,11 @@
 <template>
   <div class="detail-container">
     <div v-if="pending" class="detail-container__loading-message">
-      <LoadingSpinner /> Cargando...
+      <LoadingSpinner /> Loading...
     </div>
     <div v-else-if="error" class="detail-container__not-found-message">
       <h1 class="detail-container__not-found-message__text-error">Error: {{ error.message }}</h1>
-      <NuxtLink to="/" class="detail-container__not-found-message__back-link">Volver a la lista</NuxtLink>
+      <NuxtLink to="/" class="detail-container__not-found-message__back-link">Back to list</NuxtLink>
     </div>
     <div v-else-if="product" class="product-container">
       <div class="product-container__gallery-col">
@@ -20,7 +20,7 @@
       <div class="product-container__details-col">
         <h1 class="product-container__details-col__name">{{ product.title }}</h1>
         <p class="product-container__details-col__price">${{ product.price.toFixed(2) }}</p>
-        <p class="product-container__details-col__category-tag">Categoría: {{ product.category.name }}</p>
+        <p class="product-container__details-col__category-tag">Category: {{ product.category.name }}</p>
         <div class="product-container__details-col__quantity-selector">
           <button @click="decrementQuantity" :disabled="quantity <= 1"
             class="product-container__details-col__quantity-button">-</button>
@@ -28,16 +28,16 @@
           <button @click="incrementQuantity" class="product-container__details-col__quantity-button">+</button>
         </div>
         <div class="button-group">
-          <button @click="handleBuyNow" class="button-group__buy-now-button">
-            Comprar Ahora
-          </button>
           <button @click="handleAddToCart" class="button-group__add-to-cart-button">
-            Agregar al Carrito
+            Add to Cart
+          </button>
+          <button @click="handleBuyNow" class="button-group__buy-now-button">
+            Buy Now
           </button>
         </div>
 
         <div class="product-container__details-col__description">
-          <h2>Descripción</h2>
+          <h2>Description</h2>
           <p>{{ product.description }}</p>
         </div>
       </div>
@@ -270,6 +270,7 @@ function handleBuyNow() {
   &__buy-now-button {
     background-color: #111827;
     color: white;
+    border: 2px solid transparent;
 
     &:hover {
       background-color: #374151;
@@ -279,7 +280,7 @@ function handleBuyNow() {
   &__add-to-cart-button {
     background-color: #ffffff;
     color: #111827;
-    border-color: #D1D5DB;
+    border: 2px solid #D1D5DB;
 
     &:hover {
       background-color: #F9FAFB;
@@ -296,7 +297,6 @@ function handleBuyNow() {
   cursor: pointer;
   font-weight: 600;
   transition: all 0.2s ease;
-  border: 2px solid transparent;
   width: 100%;
 }
 

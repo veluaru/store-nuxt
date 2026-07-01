@@ -2,26 +2,26 @@
   <div class="home">
     <AppHeroBanner />
     <div class="home__title-section">
-      <h2 class="home__title-section__title">Nuestros Productos</h2>
+      <h2 class="home__title-section__title">Our Products</h2>
     </div>
     <div v-if="error" class="home__error-message-section">
-      ⚠️ Error al cargar: {{ error }}
+      ⚠️ Failed to load: {{ error }}
     </div>
 
     <ProductList v-else-if="products.length > 0" :products="products" @add-to-cart="handleAddToCart" />
 
     <div v-else class="home__status-message-section">
       <div v-if="pending" class="home__status-message-section__loading-message">
-        Cargando productos...
+        Loading products...
       </div>
       <div v-else class="home__status-message-section__info-message">
-        No hay productos disponibles.
+        No products available.
       </div>
     </div>
 
     <div v-if="!error && products.length > 0" class="home__pagination-section">
       <button @click="loadMoreProducts" :disabled="pending" class="home__pagination-section__load-more-button">
-        {{ pending ? 'Cargando...' : 'Cargar más productos' }}
+        {{ pending ? 'Loading...' : 'Load more products' }}
       </button>
     </div>
   </div>
@@ -32,8 +32,6 @@ import { useProductStore } from '~/store/products';
 import { useCartStore } from '~/store/cart';
 import { storeToRefs } from 'pinia';
 import type { Product } from '~/types/Product';
-import ProductList from '~/components/ProductList.vue';
-import AppHeroBanner from '~/components/AppHeroBanner.vue';
 
 const productStore = useProductStore();
 const cartStore = useCartStore();
