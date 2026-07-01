@@ -12,11 +12,11 @@
 const props = defineProps({
   title: {
     type: String,
-    default: 'Descubre la Experiencia Tecnológica',
+    default: 'Discover the Tech Experience',
   },
   subtitle: {
     type: String,
-    default: 'Los gadgets más innovadores y la mejor tecnología te esperan. ¡Explora nuestra colección!',
+    default: 'The most innovative gadgets and the best technology await you. Explore our collection!',
   },
   backgroundImage: {
     type: String,

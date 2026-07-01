@@ -6,9 +6,9 @@
       </NuxtLink>
 
       <div class="header-content__search-bar">
-        <input type="text" placeholder="Buscar productos..." class="header-content__search-bar__input"
+        <input type="text" placeholder="Search products..." class="header-content__search-bar__input"
           v-model="searchText" @keyup.enter="handleSearch" />
-        <button class="header-content__search-bar__button" @click="handleSearch" aria-label="Buscar">
+        <button class="header-content__search-bar__button" @click="handleSearch" aria-label="Search">
           <i class="fa-solid fa-magnifying-glass"></i>
         </button>
       </div>
@@ -16,14 +16,17 @@
       <div class="header-content__header-actions">
         <!-- <NuxtLink to="/account" class="action-link">
           <i class="fa-solid fa-user"></i>
-          <span>Cuenta</span>
+          <span>Account</span>
         </NuxtLink> -->
 
         <NuxtLink to="/cart"
           class="header-content__header-actions__action-link header-content__header-actions__cart-link">
           <i class="fa-solid fa-shopping-cart"></i>
-          <span>Carrito</span>
-          <span v-if="totalItems > 0" class="header-content__header-actions__cart-badge">{{ totalItems }}</span>
+          <span>Cart</span>
+          <span
+            v-if="hasMounted && totalItems > 0"
+            class="header-content__header-actions__cart-badge"
+          >{{ totalItems }}</span>
         </NuxtLink>
       </div>
     </div>
@@ -37,6 +40,11 @@ import { storeToRefs } from 'pinia';
 const cartStore = useCartStore();
 const { totalItems } = storeToRefs(cartStore);
 const searchText = ref('');
+const hasMounted = ref(false);
+
+onMounted(() => {
+  hasMounted.value = true;
+});
 
 const router = useRouter();
 function handleSearch() {

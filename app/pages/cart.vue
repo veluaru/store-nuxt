@@ -1,11 +1,11 @@
 <template>
   <div class="cart-container">
-    <h1 class="cart-container__page-title">Tu Carrito de Compras</h1>
+    <h1 class="cart-container__page-title">Your Shopping Cart</h1>
 
     <div v-if="totalItems === 0" class="cart-container__empty-cart-message">
-      <p>Tu carrito está vacío. ¡Añade algunos productos para empezar!</p>
+      <p>Your cart is empty. Add some products to get started!</p>
       <NuxtLink to="/" class="cart-container__empty-cart-message__continue-shopping-button">
-        ← Volver a la Tienda
+        ← Back to Store
       </NuxtLink>
     </div>
 
@@ -23,8 +23,26 @@
           </div>
 
           <div class="item-list__item-quantity">
-            <span>Cantidad: </span>
-            <span>{{ item.quantity }}</span>
+            <span class="item-list__quantity-label">Quantity:</span>
+            <div class="item-list__quantity-selector">
+              <button
+                type="button"
+                @click="handleDecrease(item.id)"
+                class="item-list__quantity-button"
+                aria-label="Decrease quantity"
+              >
+                -
+              </button>
+              <span class="item-list__quantity-value">{{ item.quantity }}</span>
+              <button
+                type="button"
+                @click="handleIncrease(item)"
+                class="item-list__quantity-button"
+                aria-label="Increase quantity"
+              >
+                +
+              </button>
+            </div>
           </div>
 
           <div class="item-list__item-subtotal">
@@ -40,18 +58,18 @@
       </div>
 
       <aside class="summary">
-        <h2>Resumen de la Orden</h2>
+        <h2>Order Summary</h2>
         <div class="summary__summary-line">
-          <span>Total de Productos:</span>
+          <span>Total Items:</span>
           <strong>{{ totalItems }}</strong>
         </div>
         <div class="summary__summary-line summary__total-price">
-          <span>Total a Pagar:</span>
+          <span>Total:</span>
           <strong class="total-value">${{ totalPrice.toFixed(2) }}</strong>
         </div>
 
         <button @click="checkout" class="summary__checkout-button">
-          Pagar y Finalizar Compra
+          Checkout
         </button>
       </aside>
     </div>
@@ -61,9 +79,18 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { useCartStore } from '~/store/cart';
+import type { CartItem } from '~/store/cart';
 
 const cartStore = useCartStore();
 const { items, totalItems, totalPrice } = storeToRefs(cartStore);
+
+function handleDecrease(productId: number) {
+  cartStore.decreaseProduct(productId);
+}
+
+function handleIncrease(item: CartItem) {
+  cartStore.addProduct(item);
+}
 
 function handleRemove(productId: number) {
   cartStore.removeProduct(productId);
@@ -191,7 +218,53 @@ function checkout() {
     margin: 0;
   }
 
-  &__item-quantity,
+  &__item-quantity {
+    margin: 0 20px;
+    min-width: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    font-size: 1rem;
+    color: #4B5563;
+  }
+
+  &__quantity-label {
+    font-size: 0.875rem;
+  }
+
+  &__quantity-selector {
+    display: flex;
+    align-items: center;
+    border: 1px solid #D1D5DB;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  &__quantity-button {
+    background-color: #F9FAFB;
+    border: none;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    color: #374151;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: #E5E7EB;
+    }
+  }
+
+  &__quantity-value {
+    padding: 6px 14px;
+    font-size: 1rem;
+    font-weight: 600;
+    min-width: 1.5rem;
+    text-align: center;
+    border-left: 1px solid #D1D5DB;
+    border-right: 1px solid #D1D5DB;
+  }
+
   &__item-subtotal {
     margin: 0 20px;
     min-width: 120px;
@@ -316,7 +389,7 @@ function checkout() {
 
     &__item-quantity {
       order: 3;
-      text-align: left;
+      align-items: flex-start;
       min-width: unset;
       margin: 10px 0 0 0;
     }
